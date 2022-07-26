@@ -26,9 +26,11 @@
                         <td>{{ repLog.reps }}</td>
                         <td>{{ repLog.totalWeightLifted }}</td>
                         <td>
-                            <a href="#" class="js-delete-rep-log">
+                            <a href="#" 
+                                class="js-delete-rep-log"
+                                data-url="{{ path('rep_log_delete', {id: repLog.id }) }}"
+                                >
                                 <span class="fa fa-trash"></span>
-                                Delete
                             </a>
                         </td>
                     </tr>
@@ -71,15 +73,26 @@
         $('.js-delete-rep-log').on('click', function(e) {
             e.preventDefault();
 
-            //$(e.target).addClass('text-danger');
+            let $target = e.currentTarget,
+                deleteUrl = $target.dataset.url;
 
-            if (e.target.className.indexOf('text-danger') === -1)
-                e.target.className = e.target.className + ' text-danger';
+            if ($target.className.indexOf('text-danger') === -1)
+                $target.className = $target.className + ' text-danger';
 
-            console.log(
-                e.target,
-                e.currentTarget
-            );
+            {# 
+                console.log(
+                    e.target,
+                    e.currentTarget,
+                    $target
+                ); 
+                
+                console.dir(
+                    $target
+                );
+            #}
+
+
+            
         });
     </script>
 {% endblock %}
