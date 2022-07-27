@@ -74,7 +74,7 @@
             e.preventDefault();
 
             let $target = e.currentTarget,
-                deleteUrl = $target.dataset.url;
+                apiUrl = $target.dataset.url;
 
             if ($target.className.indexOf('text-danger') === -1)
                 $target.className = $target.className + ' text-danger';
@@ -85,11 +85,21 @@
                     e.currentTarget,
                     $target
                 ); 
-                
+
                 console.dir(
                     $target
                 );
             #}
+
+            {# let result1 = fetch(apiUrl)
+                            .then((response) => response.json())
+                            .then((data) => console.log(data)); #}
+
+            let result2 = fetch(apiUrl, {
+                            'method': 'GET'
+                            })
+                            .then((response) => response.json())
+                            .then((data) => console.log(data));
 
 
             
