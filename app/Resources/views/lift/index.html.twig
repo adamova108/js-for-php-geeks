@@ -10,7 +10,7 @@
                 </a>
             </h2>
 
-            <table class="table table-striped">
+            <table class="table table-striped js-rep-log-table">
                 <thead>
                 <tr>
                     <th>What</th>
@@ -21,15 +21,15 @@
                 </thead>
                 <tbody>
                 {% for repLog in repLogs %}
-                    <tr>
+                    <tr data-weight="{{ repLog.totalWeightLifted }}">
                         <td>{{ repLog.itemLabel|trans }}</td>
                         <td>{{ repLog.reps }}</td>
                         <td>{{ repLog.totalWeightLifted }}</td>
                         <td>
-                            <a href="#" 
-                                class="js-delete-rep-log"
-                                data-url="{{ path('rep_log_delete', {id: repLog.id }) }}"
-                                >
+                            <a href="#"
+                               class="js-delete-rep-log"
+                               data-url="{{ path('rep_log_delete', {id: repLog.id}) }}"
+                            >
                                 <span class="fa fa-trash"></span>
                             </a>
                         </td>
@@ -44,21 +44,17 @@
                     <tr>
                         <td>&nbsp;</td>
                         <th>Total</th>
-                        <th>{{ totalWeight }}</th>
+                        <th class="js-total-weight">{{ totalWeight }}</th>
                         <td>&nbsp;</td>
                     </tr>
                 </tfoot>
             </table>
 
             {{ include('lift/_form.html.twig') }}
-
         </div>
         <div class="col-md-5">
             <div class="leaderboard">
-                <h2 class="text-center">
-                    <img class="dumbbell" src="{{ asset('assets/images/dumbbell.png') }}" />
-                    Leaderboard
-                </h2>
+                <h2 class="text-center"><img class="dumbbell" src="{{ asset('assets/images/dumbbell.png') }}">Leaderboard</h2>
 
                 {{ include('lift/_leaderboard.html.twig') }}
             </div>
@@ -70,10 +66,10 @@
     {{ parent() }}
 
     <script>
-
         var RepLogApp = {
             initialize: function($wrapper) {
                 this.$wrapper = $wrapper;
+
                 this.$wrapper.find('.js-delete-rep-log').on(
                     'click',
                     this.handleRepLogDelete
@@ -83,20 +79,25 @@
                     this.handleRowClick
                 );
             },
+
             updateTotalWeightLifted: function() {
                 var totalWeight = 0;
                 this.$wrapper.find('tbody tr').each(function() {
                     totalWeight += $(this).data('weight');
                 });
+
                 this.$wrapper.find('.js-total-weight').html(totalWeight);
             },
+
             handleRepLogDelete: function(e) {
                 e.preventDefault();
+
                 $(this).addClass('text-danger');
                 $(this).find('.fa')
                     .removeClass('fa-trash')
                     .addClass('fa-spinner')
                     .addClass('fa-spin');
+
                 var deleteUrl = $(this).data('url');
                 var $row = $(this).closest('tr');
                 $.ajax({
@@ -110,6 +111,7 @@
                     }
                 });
             },
+
             handleRowClick: function() {
                 console.log('row clicked!');
             }
@@ -119,40 +121,5 @@
             var $table = $('.js-rep-log-table');
             RepLogApp.initialize($table);
         });
-
-       <?php /* $('.js-delete-rep-log').on('click', function(e) {
-            e.preventDefault();
-
-            let $target = e.currentTarget,
-                apiUrl = $target.dataset.url;
-
-            if ($target.className.indexOf('text-danger') === -1)
-                $target.className = $target.className + ' text-danger';
-
-            {# 
-                console.log(
-                    e.target,
-                    e.currentTarget,
-                    $target
-                ); 
-
-                console.dir(
-                    $target
-                );
-            #}
-
-            {# let result1 = fetch(apiUrl)
-                            .then((response) => response.json())
-                            .then((data) => console.log(data)); #}
-
-            {# let result2 = fetch(apiUrl, {
-                            'method': 'GET'
-                            })
-                            .then((response) => response.json())
-                            .then((data) => console.log(data)); #}
-
-            
-            
-        }); */?>
     </script>
 {% endblock %}
